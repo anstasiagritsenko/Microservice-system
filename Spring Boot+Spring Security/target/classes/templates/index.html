@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layouts/main :: htmlhead"/>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Обновленные стили */
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+    nav.navbar {
+        background-color: rgba(9, 51, 32, 0.78); /* Более приятный зеленый цвет */
+    }
+    a.navbar-brand, .navbar-nav .nav-link {
+        color: #f8f9fa;
+        transition: color 0.3s; /* Плавное изменение цвета текста */
+    }
+    a.navbar-brand:hover, .navbar-nav .nav-link:hover {
+        color: #62a570; /* Изменение цвета текста при наведении */
+    }
+    .jumbotron {
+        background-color: #62a570; /* Более темный зеленый цвет */
+        color: #f8f9fa;
+    }
+    .btn-primary, .btn-primary:hover, .btn-primary:focus {
+        background-color: #5e8f69; /* Более яркий зеленый цвет для кнопок */
+        border-color: #28a745;
+    }
+    .btn-primary.disabled, .btn-primary:disabled {
+        background-color: #47554a;
+        border-color: #28a745;
+    }
+    .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+    .show > .btn-primary.dropdown-toggle {
+        background-color: #1e7e34; /* Более темный оттенок зеленого цвета для активных кнопок */
+        border-color: #1e7e34;
+    }
+    footer.container-fluid {
+        background-color: rgba(23, 74, 39, 0.41); /* Более темный зеленый цвет */
+        color: #f8f9fa;
+        padding: 20px 0;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+
+<nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}" style="color: #f8f9fa;">Приют для животных 🐱</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}" style="color: #f8f9fa;">Главная</a></li>
+                <!-- Добавлены ссылки на страницы с животными -->
+                <li class="nav-item"><a class="nav-link" th:href="@{/animals/add}" style="color: #f8f9fa;">Добавить животное</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/animals}" style="color: #f8f9fa;">Список животных</a></li>
+                <!-- Скрыть кнопку для пользователей с ролью USER -->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/volunteers/volunteers_edit}" style="color: #f8f9fa;">Список волонтеров</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/profile}" style="color: #f8f9fa;">ЛК</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}" style="color: #f8f9fa;">Выход</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">Добро пожаловать на сайт приюта!</h1>
+    <p class="lead">Это ваш рабочий инструмент для учета животных в приюте.</p>
+    <hr class="my-4">
+    <p>Здесь вы можете вести список животных и контролировать их статус.</p>
+    <a class="btn btn-primary btn-lg" th:href="@{/animals}" role="button">Просмотреть животных</a>
+</div>
+
+<!-- Блок с контентом -->
+<div class="container">
+    <div class="row">
+        <!-- Блок с информацией о работе с животными -->
+        <div class="col-md-4">
+            <h2>О работе с животными</h2>
+            <p>Ваша работа в приюте важна и благородна. Здесь вы можете добавлять новых животных, обновлять их информацию и отмечать изменения в их статусе.</p>
+        </div>
+        <!-- Блок с изображением 1 -->
+        <div class="col-md-4">
+            <img src="https://assets.faceit-cdn.net/avatars/6e415b11-7ec0-4848-8c68-9df531809ec5_1610901024796.jpg" class="img-fluid" alt="Картинка 1">
+        </div>
+        <!-- Блок с изображением 2 -->
+        <div class="col-md-4">
+            <img src="https://lh3.googleusercontent.com/Ahy4myCsJIyNuqYfqI5tpEHrvv-qwe5mpKzp91_rT4HbwJKa_r_Qf8MVc7SA5-UN0w=w300" class="img-fluid" alt="Картинка 2">
+        </div>
+    </div>
+    <hr> <!-- Горизонтальная линия -->
+</div>
+
+<!-- Футер -->
+<footer class="container-fluid">
+    <div class="container">
+        <p>© 2024 Приют для животных</p>
+    </div>
+</footer>
+
+<!-- Подключение скриптов -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
