@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layouts/main :: htmlhead"/>
+<meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Обновленные стили */
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Настройка, чтобы футер был прижат к низу страницы */
+    }
+    nav.navbar {
+        background-color: rgba(9, 51, 32, 0.78); /* Более приятный зеленый цвет */
+    }
+    a.navbar-brand, .navbar-nav .nav-link {
+        color: #f8f9fa;
+        transition: color 0.3s; /* Плавное изменение цвета текста */
+    }
+    a.navbar-brand:hover, .navbar-nav .nav-link:hover {
+        color: #62a570; /* Изменение цвета текста при наведении */
+    }
+    .jumbotron {
+        background-color: #62a570; /* Более темный зеленый цвет */
+        color: #f8f9fa;
+    }
+    .btn-primary, .btn-primary:hover, .btn-primary:focus {
+        background-color: #5e8f69; /* Более яркий зеленый цвет для кнопок */
+        border-color: #28a745;
+    }
+    .btn-primary.disabled, .btn-primary:disabled {
+        background-color: #47554a;
+        border-color: #28a745;
+    }
+    .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+    .show > .btn-primary.dropdown-toggle {
+        background-color: #1e7e34; /* Более темный оттенок зеленого цвета для активных кнопок */
+        border-color: #1e7e34;
+    }
+    footer.container-fluid {
+        background-color: rgba(23, 74, 39, 0.41); /* Более темный зеленый цвет */
+        color: #f8f9fa;
+        padding: 20px 0;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+
+<nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}" style="color: #f8f9fa;">Приют для животных 🐱</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}" style="color: #f8f9fa;">Главная</a></li>
+                <!-- Добавлены ссылки на страницы с животными -->
+                <li class="nav-item"><a class="nav-link" th:href="@{/animals/add}" style="color: #f8f9fa;">Добавить животное</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/animals}" style="color: #f8f9fa;">Список животных</a></li>
+                <!-- Скрыть кнопку для пользователей с ролью USER -->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/volunteers/volunteers_edit}" style="color: #f8f9fa;">Список волонтеров</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/profile}" style="color: #f8f9fa;">ЛК</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}" style="color: #f8f9fa;">Выход</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">Ваши данные</h1>
+</div>
+
+<!-- Блок для таблицы волонтеров -->
+<div class="container border">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Должность</th>
+            <th scope="col">Роль пользователя</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Пароль</th>
+            <th scope="col" class="text-center" colspan="99">Действия</th> <!-- Здесь colspan установлен на большее значение, чем количество столбцов -->
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Блок для данных авторизованного пользователя -->
+        <div class="container border mb-4">
+            <h2 class="text-center">Данные пользователя</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>Имя:</td>
+                    <td th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.firstName : ''}"></td>
+                </tr>
+                <tr>
+                    <td>Фамилия:</td>
+                    <td th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.lastName : ''}"></td>
+                </tr>
+                <tr>
+                    <td>Должность:</td>
+                    <td th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.position : ''}"></td>
+                </tr>
+                <tr>
+                    <td>Роль пользователя:</td>
+                    <td th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.userRole : ''}"></td>
+                </tr>
+                <tr>
+                    <td>Логин:</td>
+                    <td th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.username : ''}"></td>
+                </tr>
+                <tr>
+                    <td>Пароль:</td>
+                    <td><span th:text="${currentVolunteerDetails != null ? currentVolunteerDetails.volunteer.password : ''}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Футер -->
+<footer class="container-fluid">
+    <div class="container">
+        <p>© 2024 Приют для животных</p>
+    </div>
+</footer>
+
+<!-- Подключение скриптов -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
