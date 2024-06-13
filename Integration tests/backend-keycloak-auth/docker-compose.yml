@@ -1,0 +1,34 @@
+version: '3'  # Версия Docker Compose файла
+
+services:
+  db:  # Сервис PostgreSQL
+    image: postgres:13.5  # Используемый образ PostgreSQL версии 13.5
+    environment:  # Переменные окружения для настройки PostgreSQL
+      POSTGRES_HOST_AUTH_METHOD: trust  # Разрешение аутентификации без пароля
+      POSTGRES_USER: my_admin  # Имя пользователя PostgreSQL
+      POSTGRES_PASSWORD: my_password  # Пароль пользователя PostgreSQL
+      POSTGRES_DB: keycloak_db  # Название базы данных PostgreSQL для Keycloak
+    ports:  # Проброс портов: локальный порт -> порт в контейнере PostgreSQL
+      - "5432:5432"
+    volumes:  # Том для хранения данных PostgreSQL
+      - db_data:/var/lib/postgresql/data  # Привязка каталога внутри контейнера к локальному тому
+
+  kc:  # Сервис Keycloak
+    image: quay.io/keycloak/keycloak:legacy  # Используемый образ Keycloak
+    environment:  # Переменные окружения для настройки Keycloak
+      DB_VENDOR: POSTGRES  # Используемый тип базы данных (PostgreSQL)
+      DB_ADDR: db  # Адрес хоста базы данных (название сервиса контейнера PostgreSQL)
+      DB_DATABASE: keycloak_db  # Название базы данных Keycloak в PostgreSQL
+      DB_USER: my_admin  # Имя пользователя PostgreSQL для Keycloak
+      DB_SCHEMA: public  # Схема базы данных PostgreSQL
+      DB_PASSWORD: my_password  # Пароль пользователя PostgreSQL для Keycloak
+      KEYCLOAK_HOSTNAME: backend-keycloak-auth  # Хостное имя Keycloak
+      KEYCLOAK_USER: admin  # Имя администратора Keycloak
+      KEYCLOAK_PASSWORD: admin  # Пароль администратора Keycloak
+    ports:  # Проброс портов: локальный порт -> порт в контейнере Keycloak
+      - "8080:8080"
+    depends_on:  # Зависимость от сервиса db (PostgreSQL)
+      - db
+
+volumes:
+  db_data:  # Определение тома для данных PostgreSQL

@@ -1,0 +1,20 @@
+server:
+  port: 9191  # Настройка порта, на котором будет запущен веб-сервер Spring Boot
+
+spring:
+  application:
+    name: backend-resources  # Наименование Spring приложения
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://backend-keycloak-auth:8080/auth/realms/ITM
+          # URI для издателя токенов JWT, который будет использоваться как ресурсный сервер
+
+keycloak:
+  realm: ITM  # Наименование realm (области) Keycloak, к которой ваше приложение будет подключаться
+  resource: backend-resources  # Наименование ресурса (клиента) в Keycloak
+  auth-server-url: http://backend-keycloak-auth:8080/auth  # URL сервера аутентификации Keycloak
+  credentials:
+    secret: OX2M49n456Sd9zR3x7C7dUjZgTtUFaTn  # Секретный ключ для аутентификации вашего клиента в Keycloak

@@ -1,0 +1,30 @@
+server:  # Настройки сервера
+  port: 9090  # Порт, на котором будет запущен приложение
+
+spring:  # Настройки Spring Framework
+  main:  # Основные настройки приложения
+    web-application-type: reactive  # Тип веб-приложения (реактивное)
+  application:
+    name: backend-gateway-client  # Имя приложения
+  cloud:  # Настройки Spring Cloud
+    gateway:  # Настройки API Gateway
+      routes:  # Определение маршрутов
+        - id: resources  # Идентификатор маршрута
+          uri: http://backend-resources:9191/api  # URI целевого микросервиса для маршрута
+          predicates:  # Предикаты для маршрута
+            Path:/api/**  # Путь, по которому будет срабатывать маршрут
+      default-filters: TokenRelay=  # Фильтры по умолчанию для маршрутов (в данном случае, Relay для передачи токена)
+  security:  # Настройки безопасности
+    oauth2:  # Настройки OAuth2
+      client:  # Настройки клиента OAuth2
+        registration:  # Регистрация клиента OAuth2
+          backend-gateway-client:  # Идентификатор регистрации клиента
+            provider: my-provider  # Поставщик (issuer) OAuth2
+            client-id: backend-gateway-client  # Идентификатор клиента OAuth2
+            client-secret: JssSBBqoCQZ6pJSCbQ1EttNYNGjXJRUI  # Секрет клиента OAuth2
+            authorization-grant-type: authorization_code  # Тип гранта для авторизации
+            redirect-uri: "http://backend-gateway-client:9090/login/oauth2/code/{registrationId}"  # URI перенаправления после авторизации
+            scope: openid  # Скоупы OAuth2 для запроса доступа
+        provider:  # Настройки поставщика (issuer) OAuth2
+          my-provider:  # Идентификатор поставщика
+            issuer-uri: http://backend-keycloak-auth:8080/auth/realms/ITM  # URI поставщика (issuer) OAuth2
